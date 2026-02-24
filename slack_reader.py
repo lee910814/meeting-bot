@@ -18,20 +18,25 @@ def collect_messages(client, channel_id, hours=8):
         logger.error(f"conversations_history API 호출 실패: {e}")
         raise Exception(f"채널 메시지를 읽을 수 없습니다. 봇이 채널에 초대되었는지 확인하세요. 에러: {e}")
 
-    if not result.get("ok"):
-        error_msg = result.get("error", "알 수 없는 에러")
-        logger.error(f"Slack API 에러: {error_msg}")
-        raise Exception(f"Slack API 에러: {error_msg}")
+    # 응답 데이터 확인 로그
+    logger.info(f"API 응답 ok: {result.get('ok')}")
+    logger.info(f"API 응답 메시지 수: {len(result.get('messages', []))}")
+
+    raw_messages = result.get("messages", [])
+
+    # 필터링 없이 전체 메시지 로그
+    for i, msg in enumerate(raw_messages):
+        logger.info(f"  메시지 {i}: bot_id={msg.get('bot_id')}, text={msg.get('text', '')[:50]}")
 
     messages = []
-    for msg in result.get("messages", []):
-        # 봇 메시지와 /요약 명령어는 제외
-        if msg.get("bot_id"):
+    for msg in raw_messages:
+        # 봇 메시지는 제외
+        if msg.get("bot_id") or msg.get("subtype") == "bot_message":
             continue
         text = msg.get("text", "")
-        if text and "/요약" not in text:
+        if text:
             messages.append(text)
 
     messages.reverse()  # 시간순 정렬 (오래된 것 → 최신)
-    logger.info(f"채널 {channel_id}에서 {len(messages)}개 메시지 수집 완료")
+    logger.info(f"채널 {channel_id}에서 최종 {len(messages)}개 메시지 수집 완료")
     return messages
