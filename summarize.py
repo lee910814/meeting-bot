@@ -38,10 +38,14 @@ def summarize_messages(messages: list) -> str:
     conversation = "\n".join(messages)
     logger.info(f"총 {len(messages)}개 메시지 요약 요청")
 
+    # 사용할 모델 이름 (할당량은 모델별로 별도 관리됨)
+    model_name = "gemini-2.0-flash-lite"
+    logger.info(f"사용 모델: {model_name}")
+
     try:
         # Gemini AI에 요약 요청
         response = client.models.generate_content(
-            model="gemini-2.0-flash-lite",   # 사용할 AI 모델 (무료 티어, 가볍고 빠름)
+            model=model_name,
             contents=f"""당신은 회의 내용을 요약하는 전문가입니다. 한국어로 답변해주세요.
 
 다음 슬랙 대화를 요약해주세요.
