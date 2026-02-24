@@ -21,7 +21,7 @@ def summarize_messages(messages: list) -> str:
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-1.5-flash",
             contents=f"""당신은 회의 내용을 요약하는 전문가입니다. 한국어로 답변해주세요.
 
 다음 슬랙 대화를 요약해주세요.
