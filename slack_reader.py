@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 def collect_messages(client, channel_id, hours=8):
     """지정된 채널에서 최근 N시간 동안의 메시지를 수집합니다."""
-    oldest = str(time.time() - (hours * 3600))
+    oldest = str(int(time.time() - (hours * 3600)))
     logger.info(f"메시지 수집 시작 - 채널: {channel_id}, oldest: {oldest}")
 
     try:
