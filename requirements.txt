@@ -1,4 +1,4 @@
 slack-bolt
 python-dotenv
-google-genai
+anthropic
 gunicorn
